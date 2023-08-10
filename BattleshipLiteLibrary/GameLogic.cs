@@ -164,6 +164,9 @@ namespace BattleshipLiteLibrary
             {
                 throw new ArgumentException("This was an invalid shot type.", "shot");
             }
+            
+
+
 
             char[] shotArray = shot.ToArray();
 
