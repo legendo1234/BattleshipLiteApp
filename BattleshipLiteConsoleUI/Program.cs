@@ -58,8 +58,15 @@ class Program
         do
         {
             string shot = AskForShot();
-            ( row, column) = GameLogic.SplitShotIntoRowAndColumn(shot);
-            isValidShot = GameLogic.ValidateShot(activePlayer, row, column);
+            try
+            {
+                (row, column) = GameLogic.SplitShotIntoRowAndColumn(shot);
+                isValidShot = GameLogic.ValidateShot(activePlayer, row, column);
+            }
+            catch (Exception ex)
+            {
+                isValidShot = false;
+            }
 
             if (isValidShot == false)
             {
@@ -72,6 +79,22 @@ class Program
 
         GameLogic.MarkShotResult(activePlayer, row, column, isaAHit);
 
+        DisplayShotResults(row,column,isaAHit);
+
+    }
+
+    private static void DisplayShotResults(string row, int column, bool isaAHit)
+    {
+        if (isaAHit)
+        {
+            Console.WriteLine($"{row}{column} is a HIT!");
+        }
+        else
+        {
+            Console.WriteLine($"{row}{column} is a miss");
+        }
+
+        Console.WriteLine();
     }
 
     private static string AskForShot()
@@ -101,17 +124,17 @@ class Program
 
             else if (gridSpot.Status == GridSpotStatus.Hit)
             {
-                Console.Write(" X ");
+                Console.Write(" X  ");
             }
 
             else if(gridSpot.Status == GridSpotStatus.Miss)
             {
-                Console.Write(" O ");
+                Console.Write(" O  ");
             }
 
             else
             {
-                Console.Write(" ? ");
+                Console.Write(" ?  ");
             }
         }
     }
@@ -158,10 +181,19 @@ class Program
     {
         do
         {
-            Console.Write($"Where do you want to place your next ship number  {model.ShipLocations.Count + 1} : ");
+            Console.Write($"Where do you want to place ship number {model.ShipLocations.Count + 1} : ");
             string location = Console.ReadLine();
 
-            bool isValidLocation = GameLogic.PlaceShip(model,location);
+            bool isValidLocation = false;
+
+            try
+            {
+                isValidLocation = GameLogic.PlaceShip(model, location);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
 
             if (isValidLocation == false)
             {
